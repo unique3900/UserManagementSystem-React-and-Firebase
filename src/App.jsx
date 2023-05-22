@@ -9,11 +9,11 @@ import DisplayUser from './Components/DisplayUser'
 const App = () => {
   return (
     <div>
-      <NavbarMain/>
+      {/* <NavbarMain/> */}
       <Routes>
       <Route path='/' element={<DisplayUser/>}/>
         <Route path='/addUser' element={<Adduser/>} />
-        <Route path='/updateUser' element={<UpdateUser/>} />
+        <Route path='/updateUser/:id' element={<UpdateUser/>} />
         <Route path='/login' element={<h1>Login</h1>}/>
      </Routes>
     </div>

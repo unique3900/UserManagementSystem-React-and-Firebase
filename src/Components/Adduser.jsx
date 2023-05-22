@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     useState
 } from 'react';
@@ -8,17 +8,26 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 
+import { db } from '../firebase-config';
+import {collection,addDoc } from 'firebase/firestore';
+
 const Adduser = () => {
 
+    
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [username, setUsername] = useState("");
     const [photo, setPhoto] = useState("");
 
-    const handleSubmit = (e)=>{
+    const [users, setUsers] = useState([]);
+  const userCollectionReference = collection(db, "UserData");
+
+    const handleSubmit =async (e)=>{
         e.preventDefault();
-        console.log(name, address, phone, username);
+        await addDoc(userCollectionReference, {
+           name: name,address:address,phone:phone,username:username
+        })
     }
 
     return (
@@ -83,19 +92,7 @@ const Adduser = () => {
             </InputGroup>
                 </Form.Group>
                 
-                <Form.Group as={Col}
-                md="4"
-                controlId="validationCustom02">
-                <Form.Label>Upload Photo</Form.Label>
-                <Form.Control required type="file" placeholder="Upload Photo"
-                    
-                    onChange={
-                        (e) => {
-                            setPhoto(e.target.files[0])
-                        }
-                    }/>
-
-            </Form.Group>
+              
     </Row>
     <Button type="submit">Add User</Button>
 </Form>

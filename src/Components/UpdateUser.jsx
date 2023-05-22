@@ -1,5 +1,6 @@
 
-import React from 'react'
+import { collection, doc, getDoc } from 'firebase/firestore';
+import React, { useEffect } from 'react'
 import {
     useState
 } from 'react';
@@ -8,14 +9,40 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
+import { useParams } from 'react-router-dom';
+import { db } from '../firebase-config';
 
 
 const UpdateUser = () => {
+    const params = useParams();
+    const [id, setId] = useState(params.id);
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [username, setUsername] = useState("");
+    const [prevUserData, setPrevUserData] = useState([]);
 
+
+
+   
+    const gerUserData = async () => {
+        const userCollectionReference = collection(db, "UserData");
+        const docref = await doc(db,"UserData" , id);
+        const docSnap = await getDoc(docref);
+      
+        setPrevUserData(docSnap.data());
+        setName(prevUserData.name);
+        setAddress(prevUserData.address);
+        setPhone(prevUserData.phone);
+        setUsername(prevUserData.username);
+    }
+
+    useEffect(() => {
+        gerUserData();
+        
+        console.log(id);
+    }, [name]);
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(name, address, phone, username);
@@ -31,6 +58,7 @@ const UpdateUser = () => {
                     <Form.Label>First name</Form.Label>
                     <Form.Control required type="text" placeholder="Full name"
                         value={name}
+            
                         onChange={
                             (e) => {
                                 setName(e.target.value)
