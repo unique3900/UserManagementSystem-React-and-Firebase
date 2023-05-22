@@ -28,6 +28,7 @@ const Adduser = () => {
         await addDoc(userCollectionReference, {
            name: name,address:address,phone:phone,username:username
         })
+        location.reload();
     }
 
     return (

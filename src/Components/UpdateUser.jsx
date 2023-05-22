@@ -1,5 +1,5 @@
 
-import { collection, doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect } from 'react'
 import {
     useState
@@ -9,11 +9,13 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../firebase-config';
 
 
 const UpdateUser = () => {
+
+    const navigate = useNavigate();
     const params = useParams();
     const [id, setId] = useState(params.id);
     const [name, setName] = useState("");
@@ -41,11 +43,24 @@ const UpdateUser = () => {
         gerUserData();
         
         console.log(id);
-    }, [name]);
+    }, [prevUserData.name]);
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        console.log(name, address, phone, username);
+        const userCollectionReference = collection(db, "UserData");
+        const docref = await doc(db,"UserData" , id);
+        
+        await updateDoc(docref, {
+            name:name,address:address,phone:phone,username:username
+        })
+       
+            navigate('/');
+    
+       
+
+
+
+       
     }
     return (
         <Form noValidate className='mt-5 container'

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { db } from '../firebase-config';
-import {collection,getDocs } from 'firebase/firestore';
+import {collection,deleteDoc,doc,getDocs } from 'firebase/firestore';
 import Adduser from './Adduser';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,6 +25,12 @@ const DisplayUser = () => {
   const handleUpdate = (id) => {
     navigate(`/updateUser/${id}`);
   }
+
+  const handleDelete = async (id) => {
+    const userDoc = await doc(db, "UserData",id);
+    await deleteDoc(userDoc);
+    location.reload();
+  }
   return (
     <div>
       <Adduser/>
@@ -36,7 +42,9 @@ const DisplayUser = () => {
               <button className='btn btn-primary' onClick={() => {
                 handleUpdate(item.id)
               }}>Update</button>
-              <button className='btn btn-danger m-2'>Delete</button>
+              <button className='btn btn-danger m-2' onClick={() => {
+                handleDelete(item.id)
+              }}>Delete</button>
             </div>
           )
         })
